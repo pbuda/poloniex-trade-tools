@@ -31,9 +31,14 @@ const prepareCryptoResponse = (bot, message) => {
             minValue: 100000,
             maxValue: -100000,
             coin1Volume: 0,
-            coin2Volume: 0
+            coin2Volume: 0,
+            oldest: Number.parseFloat(data[0].rate),
+            latest: Number.parseFloat(data[data.length - 1].rate)
         });
 
-        bot.reply(message, `Price change: ${responseData.minValue}-${responseData.maxValue}, BTC Volume: ${responseData.coin1Volume}, ETH Volume: ${responseData.coin2Volume}`)
+        bot.reply(message, `Price change (min-max): ${responseData.minValue}-${responseData.maxValue}\n
+        Price (oldest-latest): ${responseData.oldest}-${responseData.latest}\n
+        BTC Volume: ${responseData.coin1Volume}\n
+        ETH Volume: ${responseData.coin2Volume}`)
     }
 };
