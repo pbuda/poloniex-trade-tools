@@ -1,7 +1,7 @@
 import * as botkit from "botkit"
 import tradeHistory from "./poloniex/tradeHistory"
 
-let controller = botkit.slackbot({debug: false});
+let controller = botkit.slackbot({debug: true});
 
 controller.spawn({token: process.env.TOKEN}).startRTM();
 

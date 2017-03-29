@@ -1,15 +1,16 @@
 {
   "scripts": {
     "serve": "nodemon --debug --watch dist/ -d 1 ./dist/server.js",
-    "start": "tsc && node ./dist/server.js"
+    "start": "node ./dist/server.js",
+    "postinstall": "tsc"
   },
   "dependencies": {
+    "@types/node": "^7.0.12",
     "axios": "^0.15.3",
-    "botkit": "^0.5.2"
+    "botkit": "^0.5.2",
+    "typescript": "^2.2.2"
   },
   "devDependencies": {
-    "@types/node": "^7.0.12",
-    "nodemon": "^1.11.0",
-    "typescript": "^2.2.2"
+    "nodemon": "^1.11.0"
   }
 }
