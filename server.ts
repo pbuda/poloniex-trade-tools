@@ -9,21 +9,23 @@ controller.hears('hello', 'direct_mention', (bot, message) => {
     bot.reply(message, 'hello');
 });
 
-controller.hears('BTC_(.{3,4}) last (\\d+) ([minutes|hours])', 'direct_mention', (bot, message) => {
-    let crypto = message.match[1].toUpperCase();
-    let time = message.match[2];
-    let timeUnit = message.match[3];
-    tradeHistory(`BTC_${crypto}`, time, timeUnit).then(prepareCryptoResponse(crypto)).then(respondWithData(bot, message));
+controller.hears('(.{3,4}) (.{3,4}) last (\\d+) ([minutes|hours])', 'direct_mention', (bot, message) => {
+    let source = message.match[1].toUpperCase();
+    let crypto = message.match[2].toUpperCase();
+    let time = message.match[3];
+    let timeUnit = message.match[4];
+    tradeHistory(`${source}_${crypto}`, time, timeUnit).then(prepareCryptoResponse(source, crypto)).then(respondWithData(bot, message));
 });
 
-controller.hears('^BTC_(.{3,4})$', 'direct_mention', (bot, message) => {
-    let crypto = message.match[1].toUpperCase();
-    tradeHistory(`BTC_${crypto}`).then(prepareCryptoResponse(crypto)).then(respondWithData(bot, message))
+controller.hears('^(.{3,4}) (.{3,4})$', 'direct_mention', (bot, message) => {
+    let source = message.match[1].toUpperCase();
+    let crypto = message.match[2].toUpperCase();
+    tradeHistory(`${source}_${crypto}`).then(prepareCryptoResponse(source, crypto)).then(respondWithData(bot, message))
 });
 
 const formatNumber = (number:Number) => number.toFixed(8);
 
-const prepareCryptoResponse = (crypto) => {
+const prepareCryptoResponse = (source, crypto) => {
     return (response) => {
         const data = response.data;
         const reducer = (acc, val, index, arr) => {
@@ -36,14 +38,14 @@ const prepareCryptoResponse = (crypto) => {
             }
         };
         return data.reduce(reducer, {
-            pair: `BTC_${crypto}`,
+            pair: `${source}_${crypto}`,
             minValue: 100000,
             maxValue: -100000,
             coin1Volume: 0,
             coin2Volume: 0,
             oldest: Number.parseFloat(data[0].rate),
             latest: Number.parseFloat(data[data.length - 1].rate),
-            coin1: "BTC",
+            coin1: source,
             coin2: crypto
         });
     }
@@ -55,6 +57,12 @@ const respondWithData = (bot, message) => {
         Price (oldest-latest): ${formatNumber(data.oldest)}-${formatNumber(data.latest)}\n
         ${data.coin1} Volume: ${formatNumber(data.coin1Volume)}\n
         ${data.coin2} Volume: ${formatNumber(data.coin2Volume)}`;
+
+        let response = {
+            attachments: [
+
+            ]
+        };
 
         bot.reply(message, responseData);
     }
