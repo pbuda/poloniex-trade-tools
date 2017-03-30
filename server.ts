@@ -9,7 +9,7 @@ controller.hears('hello', 'direct_mention', (bot, message) => {
     bot.reply(message, 'hello');
 });
 
-controller.hears('(.{3,4}) (.{3,4}) last (\\d+) ([minutes|hours])', 'direct_mention', (bot, message) => {
+controller.hears('^(.{3,4}) (.{3,4}) last (\\d+) ([minutes|hours])$', 'ambient', (bot, message) => {
     let source = message.match[1].toUpperCase();
     let crypto = message.match[2].toUpperCase();
     let time = message.match[3];
@@ -17,7 +17,7 @@ controller.hears('(.{3,4}) (.{3,4}) last (\\d+) ([minutes|hours])', 'direct_ment
     tradeHistory(`${source}_${crypto}`, time, timeUnit).then(prepareCryptoResponse(source, crypto)).then(respondWithData(bot, message));
 });
 
-controller.hears('^(.{3,4}) (.{3,4})$', 'direct_mention', (bot, message) => {
+controller.hears('^(.{3,4}) (.{3,4})$', 'ambient', (bot, message) => {
     let source = message.match[1].toUpperCase();
     let crypto = message.match[2].toUpperCase();
     tradeHistory(`${source}_${crypto}`).then(prepareCryptoResponse(source, crypto)).then(respondWithData(bot, message))
