@@ -9,10 +9,11 @@ controller.hears('hello', 'direct_mention', (bot, message) => {
     bot.reply(message, 'hello');
 });
 
-controller.hears('BTC_(.{3,4}) last (\\d+) minutes', 'direct_mention', (bot, message) => {
+controller.hears('BTC_(.{3,4}) last (\\d+) ([minutes|hours])', 'direct_mention', (bot, message) => {
     let crypto = message.match[1].toUpperCase();
     let time = message.match[2];
-    tradeHistory(`BTC_${crypto}`, time).then(prepareCryptoResponse(crypto, bot, message));
+    let timeUnit = message.match[3];
+    tradeHistory(`BTC_${crypto}`, time, timeUnit).then(prepareCryptoResponse(crypto, bot, message));
 });
 
 const prepareCryptoResponse = (crypto, bot, message) => {
