@@ -16,6 +16,11 @@ controller.hears('BTC_(.{3,4}) last (\\d+) ([minutes|hours])', 'direct_mention',
     tradeHistory(`BTC_${crypto}`, time, timeUnit).then(prepareCryptoResponse(crypto, bot, message));
 });
 
+controller.hears('^BTC_(.{3,4})$', 'direct_mention', (bot, message) => {
+    let crypto = message.match[1].toUpperCase();
+    tradeHistory(`BTC_${crypto}`).then(prepareCryptoResponse(crypto, bot, message))
+});
+
 const prepareCryptoResponse = (crypto, bot, message) => {
     return (response) => {
         const data = response.data;

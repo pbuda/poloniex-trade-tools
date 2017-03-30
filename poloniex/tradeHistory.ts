@@ -2,7 +2,7 @@ import axios from "axios"
 
 const BASE_URL = "https://poloniex.com";
 
-export default (cryptoPair, time, timeUnits) => {
+export default (cryptoPair, time = 5, timeUnits = "minutes") => {
     console.log(`Fetching trade history for ${cryptoPair} in last ${time} ${timeUnits}`);
     let multiplier;
     switch(timeUnits) {
