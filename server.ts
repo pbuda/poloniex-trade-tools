@@ -53,17 +53,37 @@ const prepareCryptoResponse = (source, crypto) => {
 
 const respondWithData = (bot, message) => {
     return (data) => {
-        let responseData = `Price change (min-max): ${formatNumber(data.minValue)}-${formatNumber(data.maxValue)}\n
-        Price (oldest-latest): ${formatNumber(data.oldest)}-${formatNumber(data.latest)}\n
-        ${data.coin1} Volume: ${formatNumber(data.coin1Volume)}\n
-        ${data.coin2} Volume: ${formatNumber(data.coin2Volume)}`;
-
         let response = {
             attachments: [
-
+                {
+                    color: "good",
+                    title: "Price check",
+                    fields: [
+                        {
+                            title: "Price change (min-max)",
+                            value: `${formatNumber(data.minValue)}-${formatNumber(data.maxValue)}`,
+                            short: true
+                        },
+                        {
+                            title: "Price change (oldest-latest)",
+                            value: `${formatNumber(data.oldest)}-${formatNumber(data.latest)}`,
+                            short: true
+                        },
+                        {
+                            title: `${data.coin1} Volume`,
+                            value: formatNumber(data.coin1Volume),
+                            short: true
+                        },
+                        {
+                            title: `${data.coin2} Volume`,
+                            value: formatNumber(data.coin2Volume),
+                            short: true
+                        }
+                    ]
+                }
             ]
         };
 
-        bot.reply(message, responseData);
+        bot.reply(message, response);
     }
 };
