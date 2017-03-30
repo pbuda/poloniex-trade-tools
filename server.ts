@@ -9,7 +9,7 @@ controller.hears('hello', 'direct_mention', (bot, message) => {
     bot.reply(message, 'hello');
 });
 
-controller.hears('^(.{3,4}) (.{3,4}) last (\\d+) ([minutes|hours])$', 'ambient', (bot, message) => {
+controller.hears('^(.{3,4}) (.{3,4}) last (\\d+) (minute[s]{0,1}|hour[s]{0,1})$', 'ambient', (bot, message) => {
     let source = message.match[1].toUpperCase();
     let crypto = message.match[2].toUpperCase();
     let time = message.match[3];

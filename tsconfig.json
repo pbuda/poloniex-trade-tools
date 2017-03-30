@@ -4,5 +4,6 @@
     "target": "es2015",
     "outDir": "./dist",
     "allowJs": true
-  }
+  },
+  "exclude": ["node_modules", "dist"]
 }

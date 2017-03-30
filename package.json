@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "tsc:watch": "tsc -w",
     "serve": "nodemon --debug --watch dist/ -d 1 ./dist/server.js",
     "start": "node ./dist/server.js",
     "postinstall": "tsc"

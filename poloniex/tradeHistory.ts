@@ -6,8 +6,12 @@ const _tradeHistory = (cryptoPair, time, timeUnits) => {
     console.log(`Fetching trade history for ${cryptoPair} in last ${time} ${timeUnits}`);
     let multiplier;
     switch(timeUnits) {
-        case "minutes": multiplier = 60; break;
-        case "hours": multiplier = 3600; break;
+        case "minutes":
+        case "minute":
+            multiplier = 60; break;
+        case "hours":
+        case "hour":
+            multiplier = 3600; break;
         default: multiplier = 60;
     }
 
