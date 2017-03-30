@@ -9,12 +9,13 @@ controller.hears('hello', 'direct_mention', (bot, message) => {
     bot.reply(message, 'hello');
 });
 
-controller.hears('BTC_ETH last (\\d+) minutes', 'direct_mention', (bot, message) => {
-    let time = message.match[1];
-    tradeHistory("BTC_ETH", time).then(prepareCryptoResponse(bot, message));
+controller.hears('BTC_(.{3,4}) last (\\d+) minutes', 'direct_mention', (bot, message) => {
+    let crypto = message.match[1].toUpperCase();
+    let time = message.match[2];
+    tradeHistory(`BTC_${crypto}`, time).then(prepareCryptoResponse(crypto, bot, message));
 });
 
-const prepareCryptoResponse = (bot, message) => {
+const prepareCryptoResponse = (crypto, bot, message) => {
     return (response) => {
         const data = response.data;
         const reducer = (acc, val, index, arr) => {
@@ -27,7 +28,7 @@ const prepareCryptoResponse = (bot, message) => {
             }
         };
         let responseData = data.reduce(reducer, {
-            pair: "BTC_ETH",
+            pair: `BTC_${crypto}`,
             minValue: 100000,
             maxValue: -100000,
             coin1Volume: 0,
@@ -39,6 +40,6 @@ const prepareCryptoResponse = (bot, message) => {
         bot.reply(message, `Price change (min-max): ${responseData.minValue}-${responseData.maxValue}\n
         Price (oldest-latest): ${responseData.oldest}-${responseData.latest}\n
         BTC Volume: ${responseData.coin1Volume}\n
-        ETH Volume: ${responseData.coin2Volume}`)
+        ${crypto} Volume: ${responseData.coin2Volume}`)
     }
 };
