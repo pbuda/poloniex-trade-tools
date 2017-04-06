@@ -27,11 +27,11 @@ export const attachAlert = (bot, alert: Alert, liveSource, alertsRepository) => 
             if (latestTrade.rate >= alert.rate.value) {
                 percentage = `${Number(latestTrade.rate / alert.rate.value * 100 - 100).toFixed(2)}%`;
                 receiver = PriceWatchAlert.rateDownAlert(bot, alert, unsubscribe);
-                message = `created alert for ${alert.crypto} fall to ${alert.rate.value} ${alert.source} (latest price: ${new Rate(latestTrade.rate).formatted()}, fall by ${percentage}`
+                message = `created alert for ${alert.crypto} fall to ${alert.rate.value} ${alert.source} (latest price: ${new Rate(latestTrade.rate).formatted()}, fall by ${percentage})`
             } else {
                 percentage = `${Number(alert.rate.value / latestTrade.rate * 100 - 100).toFixed(2)}%`;
                 receiver = PriceWatchAlert.rateUpAlert(bot, alert, unsubscribe);
-                message = `created alert for ${alert.crypto} rise to ${alert.rate.value} ${alert.source} (latest price: ${new Rate(latestTrade.rate).formatted()}, rise by ${percentage}`
+                message = `created alert for ${alert.crypto} rise to ${alert.rate.value} ${alert.source} (latest price: ${new Rate(latestTrade.rate).formatted()}, rise by ${percentage})`
             }
             liveSource.subscribe(receiver);
             return message;
