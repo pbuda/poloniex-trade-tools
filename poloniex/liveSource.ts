@@ -7,7 +7,7 @@ export interface EventReceiver {
     receive<T>(event: Event<T>)
 }
 
-export default class LiveSource {
+export class LiveSource {
     private connection: Connection;
     private session: Session;
     private receivers: EventReceiver[];
@@ -31,6 +31,11 @@ export default class LiveSource {
     subscribe(receiver: EventReceiver) {
         this.receivers.push(receiver);
         this.connect(receiver)
+    }
+
+    unsubscribe(receiver: EventReceiver) {
+        let index = this.receivers.indexOf(receiver);
+        if(index > -1) this.receivers.splice(index, 1)
     }
 
     private connect(receiver: EventReceiver) {

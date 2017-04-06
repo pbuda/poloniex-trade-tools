@@ -7,7 +7,7 @@ export default (controller, {alertsRepository, liveSource}) => {
         let crypto = message.match[2].toUpperCase();
         let rate = message.match[3];
         alertsRepository.createNew(source, crypto, rate, message.channel).then((alert:Alert) => {
-            attachAlert(bot, alert, liveSource);
+            attachAlert(bot, alert, liveSource, alertsRepository);
             bot.reply(message, `created alert for when ${crypto} price reaches ${alert.rate.formatted()} ${source}`)
         });
     });

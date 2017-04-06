@@ -24,4 +24,8 @@ export class AlertsRepository {
         let alert = new Alert(new ObjectID(), source, crypto, new Rate(rate), channelId);
         return await this.save(alert);
     }
+
+    async delete(alert: Alert): Promise<void> {
+        await this.coll.deleteOne({_id: alert.id})
+    }
 }

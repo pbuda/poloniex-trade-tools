@@ -3,7 +3,7 @@ import DB from "./persistence/db"
 import * as assert from "assert";
 import {Db} from "mongodb";
 import {AlertsRepository} from "./alerts/alertsRepository";
-import LiveSource from "./poloniex/liveSource";
+import {LiveSource} from "./poloniex/liveSource";
 import {setupAlerts} from "./alerts/alerts"
 
 require("dotenv").config();
