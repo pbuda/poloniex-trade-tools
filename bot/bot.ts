@@ -5,10 +5,10 @@ import alertsBotMessages from "./alertsBotMessages"
 export default (beans):any => {
     let controller = botkit.slackbot({debug: process.env.BOTKIT_SLACKBOT_DEBUG || false});
 
-    controller.spawn({token: process.env.TOKEN}).startRTM();
+    const bot = controller.spawn({token: process.env.TOKEN}).startRTM();
 
     tradeHistoryBotMessage(controller);
     alertsBotMessages(controller, beans);
 
-    return beans;
+    return {...beans, bot: bot}
 }
