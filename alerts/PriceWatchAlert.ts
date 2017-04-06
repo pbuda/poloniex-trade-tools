@@ -1,30 +1,59 @@
-import {EventReceiver, LiveSource} from "../poloniex/liveSource";
-import Rate from "../support/Rate";
+import {EventReceiver} from "../poloniex/liveSource";
 import {Event, TradeEvent} from "../poloniex/events";
+import Alert from "./alert";
+import Rate from "../support/Rate";
 
 export default class PriceWatchAlert implements EventReceiver {
+    static rateUpAlert(bot, alert: Alert, unsubscribe: (receiver: EventReceiver) => void) {
+        const rateIsHigherThanAlert = (rate: Rate, alert: Alert): Boolean => {
+            return rate.value >= alert.rate.value;
+        };
+        return new PriceWatchAlert(bot, alert, rateIsHigherThanAlert, unsubscribe, true)
+    }
+
+    static rateDownAlert(bot, alert: Alert, unsubscribe: (receiver: EventReceiver) => void) {
+        const rateIsLowerThanAlert = (rate: Rate, alert: Alert): Boolean => {
+            return rate.value <= alert.rate.value;
+        };
+
+        return new PriceWatchAlert(bot, alert, rateIsLowerThanAlert, unsubscribe, false)
+    }
+
+    private bot;
+    private alert;
+    private compare;
     private unsubscribe;
+    private upAlert;
     private processing = true;
 
-    constructor(public bot, public channelId: String, public source: String, public crypto: String, public rate: Rate, unsubscribe: (receiver: EventReceiver) => void) {
+    private constructor(bot, alert: Alert, compare: (rate: Rate, alert: Alert) => Boolean, unsubscribe: (receiver: EventReceiver) => void, upAlert: Boolean) {
+        this.bot = bot;
+        this.alert = alert;
+        this.compare = compare;
         this.unsubscribe = unsubscribe;
+        this.upAlert = upAlert;
     }
 
     key(): String {
-        return `${this.source}_${this.crypto}`;
+        return `${this.alert.source}_${this.alert.crypto}`;
     }
 
     receive<T>(event: Event<T>) {
         if (event instanceof TradeEvent && this.processing) {
             let tradeEvent = <TradeEvent> event;
-            if (tradeEvent.data.rate >= this.rate.value) {
+            if (this.compare(tradeEvent.data.rate, this.alert)) {
                 this.bot.say({
-                    text: `<!channel> ${this.crypto} price reached ${this.rate.formatted()} ${this.source}!`,
-                    channel: this.channelId
+                    text: this.buildMessage(),
+                    channel: this.alert.channelId
                 });
                 this.processing = false;
                 this.unsubscribe(this);
             }
         }
+    }
+
+    private buildMessage():any {
+        let direction = this.upAlert ? "rose" : "fell";
+        return `<!channel> ${this.alert.crypto} price ${direction} to ${this.alert.rate.formatted()} ${this.alert.source}!`;
     }
 }

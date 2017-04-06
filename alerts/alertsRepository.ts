@@ -20,8 +20,8 @@ export class AlertsRepository {
         return alert;
     }
 
-    async createNew(source: String, crypto: String, rate: number, channelId: String): Promise<Alert> {
-        let alert = new Alert(new ObjectID(), source, crypto, new Rate(rate), channelId);
+    async createNew(source: String, crypto: String, rate: Rate, channelId: String): Promise<Alert> {
+        let alert = new Alert(new ObjectID(), source, crypto, rate, channelId);
         return await this.save(alert);
     }
 

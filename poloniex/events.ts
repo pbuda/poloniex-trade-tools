@@ -1,3 +1,4 @@
+import Rate from "../support/Rate";
 export type EventType = "newTrade" | "orderBookModify" | "orderBookRemove"
 
 export type OrderBookUpdateType = "ask" | "bid"
@@ -18,12 +19,12 @@ export interface TradeData {
 }
 
 export class TradeData2 {
-    constructor(public tradeId: number, public rate: number, public amount: number, public total: number, public type: TradeType) {
+    constructor(public tradeId: number, public rate: Rate, public amount: number, public total: number, public type: TradeType) {
     }
 }
 
 export class OrderBookData {
-    constructor(public rate: number, public type: OrderBookUpdateType, amount?: number) {
+    constructor(public rate: Rate, public type: OrderBookUpdateType, amount?: number) {
     }
 }
 

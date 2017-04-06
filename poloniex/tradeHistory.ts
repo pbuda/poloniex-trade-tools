@@ -40,3 +40,21 @@ export default (source, crypto, time = 5, timeUnits = "minutes") => {
         }
     })
 }
+
+export const limitedTradeHistory = (source, crypto) => {
+    console.log(`Getting limited trade history for pair ${source}_${crypto}`);
+    return axios.get(`${BASE_URL}/public`, {
+        params: {
+            command: "returnTradeHistory",
+            currencyPair: `${source}_${crypto}`
+        }
+    }).then(response => {
+        return {
+            meta: {
+                source: source,
+                crypto: crypto
+            },
+            response: response
+        }
+    })
+};

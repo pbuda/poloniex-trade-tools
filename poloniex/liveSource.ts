@@ -1,6 +1,7 @@
 import {Connection, Session} from "autobahn";
 import {Event, OrderBookEvent, TradeEvent} from "./events";
 import * as assert from "assert";
+import Rate from "../support/Rate";
 
 export interface EventReceiver {
     key(): String
@@ -60,11 +61,11 @@ export class LiveSource {
                 let specificEvent;
                 switch(event.type) {
                     case "newTrade":
-                        specificEvent = new TradeEvent(event.type, event.data);
+                        specificEvent = new TradeEvent(event.type, {...event.data, rate: new Rate(event.data.rate)});
                         break;
                     case "orderBookModify":
                     case "orderBookRemove":
-                        specificEvent = new OrderBookEvent(event.type, event.data);
+                        specificEvent = new OrderBookEvent(event.type, {...event.data, rate: new Rate(event.data.rate)});
                 }
                 this.receivers.filter(receiver => receiver.key() === key).forEach(receiver => receiver.receive(specificEvent))
             })
