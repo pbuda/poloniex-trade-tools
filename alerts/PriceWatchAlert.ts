@@ -4,6 +4,7 @@ import {Event, TradeEvent} from "../poloniex/events";
 
 export default class PriceWatchAlert implements EventReceiver {
     private unsubscribe;
+    private processing = true;
 
     constructor(public bot, public channelId: String, public source: String, public crypto: String, public rate: Rate, unsubscribe: (receiver: EventReceiver) => void) {
         this.unsubscribe = unsubscribe;
@@ -14,13 +15,14 @@ export default class PriceWatchAlert implements EventReceiver {
     }
 
     receive<T>(event: Event<T>) {
-        if (event instanceof TradeEvent) {
+        if (event instanceof TradeEvent && this.processing) {
             let tradeEvent = <TradeEvent> event;
             if (tradeEvent.data.rate >= this.rate.value) {
                 this.bot.say({
                     text: `<!channel> ${this.crypto} price reached ${this.rate.formatted()} ${this.source}!`,
                     channel: this.channelId
                 });
+                this.processing = false;
                 this.unsubscribe(this);
             }
         }
